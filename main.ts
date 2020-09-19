@@ -1,15 +1,19 @@
-
-class Clien{
-    readonly _firstname:string;
-    readonly _lastname:string;
+class Person{
+    private _firstname:string;
+    private _lastname:string;
+    protected constructor(fname:string,lname:string) {
+        this._firstname=fname;
+        this._lastname = lname;
+    }
+}
+class Clien extends Person{
     private _PIN :number = Math.floor(Math.random()*10000);
     readonly creditCardId:number = Math.floor(Math.random()*100000);
     private _Balance:number=0;
     private greeter:string="Thank you for using our bank.\nYour Credit Cars number is :"+this.creditCardId+"\n" +
         "Your PIN (Dont tell it to someone):"+this._PIN;
     constructor(firstname:string,lastname :string ) {
-        this._firstname=firstname;
-        this._lastname = lastname;
+        super(firstname,lastname);
         console.log(this.greeter);
 
 
@@ -25,11 +29,17 @@ class Clien{
         }else{
             throw new Error("Не указана опреация");
         }
-
-
     }
 }
-class ATM{
+interface Actions{
+    AddBalance(sum:number):void;
+    WithdrawMoney(sum:number);
+    CheckBalance();
+}
+
+
+
+class ATM implements  Actions{
     readonly AtmId:number =Math.floor(1000000 * Math.random());
     readonly _client:Clien;
     constructor(client:Clien) {
@@ -37,7 +47,7 @@ class ATM{
 
     }
 
-    AddBalance(sum:number){
+    AddBalance(sum:number):void{
         if(this._client){
             this._client.changeBalance(sum,"add");
         }
