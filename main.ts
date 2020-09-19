@@ -1,25 +1,17 @@
-class Person implements Bank{
-    private _firstname:string;
-    private _lastname:string;
-    protected constructor(fname:string,lname:string) {
 
-        this._firstname=fname;
-        this._lastname = lname;
-    }
-}
 interface Bank{
     creditCardId?:number;
     AtmId?:number;
     [propName: string]: any;
 }
-class Clien extends Person{
+class Clien implements Bank{
     private _PIN :number = Math.floor(Math.random()*10000);
     readonly creditCardId:number = Math.floor(Math.random()*100000);
     private _Balance:number=0;
     private greeter:string="Thank you for using our bank.\nYour Credit Cars number is :"+this.creditCardId+"\n" +
         "Your PIN (Dont tell it to someone):"+this._PIN;
     constructor(firstname:string,lastname :string ) {
-        super(firstname,lastname);
+
         console.log(this.greeter);
     }
     get Balance():number{
