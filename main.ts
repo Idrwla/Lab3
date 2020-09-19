@@ -15,8 +15,6 @@ class Clien extends Person{
     constructor(firstname:string,lastname :string ) {
         super(firstname,lastname);
         console.log(this.greeter);
-
-
     }
     get Balance():number{
         return this._Balance;
@@ -30,9 +28,12 @@ class Clien extends Person{
             throw new Error("Не указана опреация");
         }
     }
+    CheckPin(){
+        return this._PIN;
+    }
 }
 interface Actions{
-    AddBalance(sum:number):void;
+    AddBalance(sum:number);
     WithdrawMoney(sum:number);
     CheckBalance();
 }
@@ -42,11 +43,14 @@ interface Actions{
 class ATM implements  Actions{
     readonly AtmId:number =Math.floor(1000000 * Math.random());
     readonly _client:Clien;
-    constructor(client:Clien) {
-        this._client=client;
+    constructor(client:Clien ,pin:number) {
+        if(pin===client.CheckPin()){
+            this._client=client;
+        }else{
+            throw new Error("Your have entired wrong pin please try again")
+        }
 
     }
-
     AddBalance(sum:number):void{
         if(this._client){
             this._client.changeBalance(sum,"add");
@@ -67,7 +71,7 @@ class ATM implements  Actions{
 
 
 let ilyar:Clien = new Clien("ilyar","Makhsumov");
-let atm :ATM = new ATM(ilyar);
+let atm :ATM = new ATM(ilyar,1534);
 atm.AddBalance(5000);
 atm.WithdrawMoney(60000);
 atm.CheckBalance();
