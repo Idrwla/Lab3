@@ -1,10 +1,16 @@
-class Person{
+class Person implements Bank{
     private _firstname:string;
     private _lastname:string;
     protected constructor(fname:string,lname:string) {
+
         this._firstname=fname;
         this._lastname = lname;
     }
+}
+interface Bank{
+    creditCardId?:number;
+    AtmId?:number;
+    [propName: string]: any;
 }
 class Clien extends Person{
     private _PIN :number = Math.floor(Math.random()*10000);
@@ -38,39 +44,48 @@ interface Actions{
     CheckBalance();
 }
 
-
-
-class ATM implements  Actions{
+class ATM implements  Actions,Bank{
     readonly AtmId:number =Math.floor(1000000 * Math.random());
     readonly _client:Clien;
+    private _accepted:boolean =false;
     constructor(client:Clien ,pin:number) {
         if(pin===client.CheckPin()){
             this._client=client;
+            this._accepted =true;
         }else{
-            throw new Error("Your have entired wrong pin please try again")
-        }
 
+            console.log("Your have entired wrong pin please try again");
+        }
     }
     AddBalance(sum:number):void{
-        if(this._client){
+        if(this._client&&this._accepted){
             this._client.changeBalance(sum,"add");
         }
     }
     WithdrawMoney(sum:number){
-        if(this._client.Balance>0&&(this._client.Balance-sum>0)){
+        if(!this._accepted){
+            console.log("You arent accepted")
+        }
+        else if(this._client.Balance>0&&(this._client.Balance-sum>0)){
             this._client.changeBalance(sum,"sub");
         }else{
-            console.log("lol You dont have any money");
+            console.log("lol You dont have money");
         }
     }
     CheckBalance(){
-        console.log("Your current balance is " +this._client.Balance);
+        if(!this._accepted){
+            console.log("You arent accepted")
+        }else{
+            console.log("Your current balance is " +this._client.Balance);
+        }
     }
-
 }
 
 
 let ilyar:Clien = new Clien("ilyar","Makhsumov");
+
+
+
 let atm :ATM = new ATM(ilyar,1534);
 atm.AddBalance(5000);
 atm.WithdrawMoney(60000);
