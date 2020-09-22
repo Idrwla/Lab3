@@ -1,10 +1,10 @@
 
-interface Bank{
+interface Bank{                                 //  тут дожно было быть класс(  
     creditCardId?:number;
     AtmId?:number;
     [propName: string]: any;
 }
-class Clien implements Bank{
+class Clien implements Bank{                    // extends   вместо implements 
     private _PIN :number = Math.floor(Math.random()*10000);
     readonly creditCardId:number = Math.floor(Math.random()*100000);
     private _Balance:number=0;
@@ -30,13 +30,13 @@ class Clien implements Bank{
         return this._PIN;
     }
 }
-interface Actions{
+interface Actions{                                          // изменить имя на IAction
     AddBalance(sum:number);
     WithdrawMoney(sum:number);
     CheckBalance();
 }
 
-class ATM implements  Actions,Bank{
+class ATM implements  Actions,Bank{                         //  тут class ATM extends Bank implements IAction
     readonly AtmId:number =Math.floor(1000000 * Math.random());
     readonly _client:Clien;
     private _accepted:boolean =false;
