@@ -1,10 +1,14 @@
 
-interface Bank{
-    creditCardId?:number;
-    AtmId?:number;
+abstract class Bank {
+    public creditCardId?: number;
+    public AtmId?: number;
+
     [propName: string]: any;
+    protected constructor() {
+    }
+
 }
-class Clien implements Bank{
+class Client implements Bank{
     private _PIN :number = Math.floor(Math.random()*10000);
     readonly creditCardId:number = Math.floor(Math.random()*100000);
     private _Balance:number=0;
@@ -30,23 +34,22 @@ class Clien implements Bank{
         return this._PIN;
     }
 }
-interface Actions{
+interface IOperation{
     AddBalance(sum:number);
     WithdrawMoney(sum:number);
     CheckBalance();
 }
 
-class ATM implements  Actions,Bank{
+class ATMSession implements Bank,IOperation{
     readonly AtmId:number =Math.floor(1000000 * Math.random());
-    readonly _client:Clien;
-    private _accepted:boolean =false;
-    constructor(client:Clien ,pin:number) {
+    readonly _client:Client;
+    private readonly _accepted:boolean =false;
+    constructor(client:Client ,pin:number) {
         if(pin===client.CheckPin()){
             this._client=client;
             this._accepted =true;
         }else{
-
-            console.log("Your have entired wrong pin please try again");
+            console.log("Your have texted wrong pin please try again");
         }
     }
     AddBalance(sum:number):void{
@@ -74,12 +77,13 @@ class ATM implements  Actions,Bank{
 }
 
 
-let ilyar:Clien = new Clien("ilyar","Makhsumov");
+let Ilyar:Client = new Client("Ilyar","Makhsumov");
 
 
 
-let atm :ATM = new ATM(ilyar,1534);
-atm.AddBalance(5000);
-atm.WithdrawMoney(60000);
-atm.CheckBalance();
-console.log(ilyar.creditCardId)
+let atm :ATMSession = new ATMSession(Ilyar,1534);
+//atm.AddBalance(5000);
+//atm.WithdrawMoney(60000);
+//atm.CheckBalance();
+console.log(Ilyar.creditCardId)
+
