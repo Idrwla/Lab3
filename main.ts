@@ -1,10 +1,14 @@
 
-interface Bank{                                 //  тут дожно было быть класс(  
-    creditCardId?:number;
-    AtmId?:number;
+class Bank {
+    public creditCardId?: number;
+    public AtmId?: number;
+
     [propName: string]: any;
+    protected constructor() {
+    }
+
 }
-class Clien implements Bank{                    // extends   вместо implements 
+class Client implements Bank{
     private _PIN :number = Math.floor(Math.random()*10000);
     readonly creditCardId:number = Math.floor(Math.random()*100000);
     private _Balance:number=0;
@@ -30,29 +34,30 @@ class Clien implements Bank{                    // extends   вместо implem
         return this._PIN;
     }
 }
-interface Actions{                                          // изменить имя на IAction
+interface IOperation{
     AddBalance(sum:number);
     WithdrawMoney(sum:number);
     CheckBalance();
 }
 
-class ATM implements  Actions,Bank{                         //  тут class ATM extends Bank implements IAction
+class AtmSession implements Bank,IOperation{
     readonly AtmId:number =Math.floor(1000000 * Math.random());
-    readonly _client:Clien;
-    private _accepted:boolean =false;
-    constructor(client:Clien ,pin:number) {
+    private _client:Client;
+    private readonly _accepted:boolean =false;
+    constructor(client:Client ,pin:number) {
         if(pin===client.CheckPin()){
             this._client=client;
             this._accepted =true;
         }else{
-
-            console.log("Your have entired wrong pin please try again");
+            console.log("Your have texted wrong pin please try again");
         }
     }
     AddBalance(sum:number):void{
         if(this._client&&this._accepted){
             this._client.changeBalance(sum,"add");
         }
+        console.log("Спасибо что используете наш банк!");
+        this._client=null;
     }
     WithdrawMoney(sum:number){
         if(!this._accepted){
@@ -63,6 +68,8 @@ class ATM implements  Actions,Bank{                         //  тут class ATM
         }else{
             console.log("lol You dont have money");
         }
+        console.log("Спасибо что используете наш банк!");
+        this._client=null;
     }
     CheckBalance(){
         if(!this._accepted){
@@ -70,16 +77,18 @@ class ATM implements  Actions,Bank{                         //  тут class ATM
         }else{
             console.log("Your current balance is " +this._client.Balance);
         }
+        console.log("Спасибо что используете наш банк!");
+        this._client=null;
     }
 }
 
 
-let ilyar:Clien = new Clien("ilyar","Makhsumov");
+let Ilyar:Client = new Client("Ilyar","Makhsumov");
 
 
 
-let atm :ATM = new ATM(ilyar,1534);
-atm.AddBalance(5000);
-atm.WithdrawMoney(60000);
-atm.CheckBalance();
-console.log(ilyar.creditCardId)
+let atm :AtmSession = new AtmSession(Ilyar,1534);
+//atm.AddBalance(5000);
+//atm.WithdrawMoney(60000);
+//atm.CheckBalance();
+console.log(Ilyar.creditCardId)
