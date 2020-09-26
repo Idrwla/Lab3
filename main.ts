@@ -1,5 +1,5 @@
 
-abstract class Bank {
+class Bank {
     public creditCardId?: number;
     public AtmId?: number;
 
@@ -40,9 +40,9 @@ interface IOperation{
     CheckBalance();
 }
 
-class ATMSession implements Bank,IOperation{
+class AtmSession implements Bank,IOperation{
     readonly AtmId:number =Math.floor(1000000 * Math.random());
-    readonly _client:Client;
+    private _client:Client;
     private readonly _accepted:boolean =false;
     constructor(client:Client ,pin:number) {
         if(pin===client.CheckPin()){
@@ -56,6 +56,8 @@ class ATMSession implements Bank,IOperation{
         if(this._client&&this._accepted){
             this._client.changeBalance(sum,"add");
         }
+        console.log("Спасибо что используете наш банк!");
+        this._client=null;
     }
     WithdrawMoney(sum:number){
         if(!this._accepted){
@@ -66,6 +68,8 @@ class ATMSession implements Bank,IOperation{
         }else{
             console.log("lol You dont have money");
         }
+        console.log("Спасибо что используете наш банк!");
+        this._client=null;
     }
     CheckBalance(){
         if(!this._accepted){
@@ -73,6 +77,8 @@ class ATMSession implements Bank,IOperation{
         }else{
             console.log("Your current balance is " +this._client.Balance);
         }
+        console.log("Спасибо что используете наш банк!");
+        this._client=null;
     }
 }
 
@@ -81,7 +87,7 @@ let Ilyar:Client = new Client("Ilyar","Makhsumov");
 
 
 
-let atm :ATMSession = new ATMSession(Ilyar,1534);
+let atm :AtmSession = new AtmSession(Ilyar,1534);
 //atm.AddBalance(5000);
 //atm.WithdrawMoney(60000);
 //atm.CheckBalance();
